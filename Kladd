@@ -1,0 +1,71 @@
+                
+      //checkedState: new Array(extras.length).fill(false),
+      //total: 0
+
+
+  /*
+  const handleOnChange = (position) => {
+    this.setState(checkedState: checkedState.map((item, index) => {
+      index === position ? !item : item
+      })
+    };
+'7'
+
+  //_--------------------------------------------------
+  /*
+  <input type="checkbox" id="myCheck" onclick={() => this.setState({ checkedState: this.state = true})})>
+
+  <p id="text" style="display:none">Checkbox is CHECKED!</p>
+
+  function myFunction() {
+    // Get the checkbox
+    var checkBox = document.getElementById("myCheck");
+    // Get the output text
+    var text = document.getElementById("text");
+  
+    // If the checkbox is checked, display the output text
+    if (checkBox.checked == true){
+      text.style.display = "block";
+    } else {
+      text.style.display = "none";
+    }
+  }
+  */
+  //_--------------------------------------------------
+
+
+//_--------------------------------------------------
+//const [checkedState, setCheckedState] = useState(
+//  new Array(extras.length).fill(false)
+//);
+
+//const [total, setTotal] = useState(0);
+
+const handleOnChange = (position) => {
+  const updatedCheckedState = checkedState.map((item, index) =>
+    index === position ? !item : item
+  );
+
+  setCheckedState(updatedCheckedState);
+
+  const totalPrice = updatedCheckedState.reduce(
+    (sum, currentState, index) => {
+      if (currentState === true) {
+        return sum + toppings[index].price;
+      }
+      return sum;
+    },
+    0
+  );
+
+  setTotal(totalPrice);
+};
+//_--------------------------------------------------
+
+
+
+                    id={`custom-checkbox-${index}`}
+                    name={name}
+                    value={name}
+                    checked={checkedState[index]}
+                    onChange={() => handleOnChange(index)}
