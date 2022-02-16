@@ -4,6 +4,8 @@ import { Component } from "react"; //Ny import
 import inventory from "./inventory.ES6"; //Ny import
 import ComposeSalad from "./ComposeSalad"; //Ny import
 import ViewOrder from "./ViewOrder";
+import { Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -13,6 +15,8 @@ class App extends Component {
     };
     this.handleSalad = this.handleSalad.bind(this);
     this.resetOrders = this.resetOrders.bind(this);
+    this.renderPageContent = this.renderPageContent.bind(this);
+    this.renderRouter = this.renderRouter.bind(this);
   }
 
   handleSalad(salad) {
@@ -28,40 +32,77 @@ class App extends Component {
   render() {
     return (
       <div className="container py-4">
-        <header className="pb-3 mb-4 border-bottom">
-          <span className="fs-4">Rubrik för labboration 2</span>
-        </header>
-        <div className="col-12">
-          <div className="h-200 p-5 bg-light border rounded-3">
-            <h2>Salladsbaren</h2>
-            <ViewOrder
-              order={this.state.order}
-              handleSubmit={this.resetOrders}
-            />
-            <div className="p-2 SalladStuff">
-              <ComposeSalad
-                inventory={inventory}
-                handleSalad={this.handleSalad}
-              />
-            </div>
-          </div>
-        </div>
+        <Header />
+        <Navbar />
+        {this.renderRouter}
         <footer className="pt-3 mt-4 text-muted border-top">
           EDAF90 - webprogrammering
         </footer>
       </div>
     );
   }
+  renderPageContent() {
+    return (
+      <>
+        <ViewOrder order={this.state.order} handleSubmit={this.resetOrders} />
+        <ComposeSalad inventory={inventory} handleSalad={this.handleSalad} />
+      </>
+    );
+  }
+
+  renderRouter() {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route
+            path="ComposeSalad"
+            element={
+              <ComposeSalad
+                inventory={inventory}
+                handleSalad={this.handleSalad}
+              />
+            }
+          />
+          <Route
+            path="ViewOrder"
+            element={
+              <ViewOrder
+                order={this.state.order}
+                handleSubmit={this.resetOrders}
+              />
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
+}
+
+function Header() {
+  return (
+    <header className="pb-3 mb-4 border-bottom">
+      <span className="fs-4">Salladsbaren</span>
+    </header>
+  );
+}
+
+function Navbar() {
+  return (
+    <ul className="nav nav-tabs">
+      <li className="nav-item">
+        <Link className="nav-link" to="/ComposeSalad">
+          Komponera en sallad
+        </Link>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link" to="/ViewOrder">
+          Se din beställning
+        </Link>
+      </li>
+      {/* more links */}
+    </ul>
+  );
 }
 
 export default App;
-
-//Reflection 1
-//A functional component is a plane JS function witth props as arguments, returning react elements. No render methods are used.
-//Class components extends from react and requires a render method to return react elements.
-
-//Relfection 2
-//The render function can fail and halt the program
-
-//Reflection 3
-//Yes, react has built in functions for caching such as useMemo()
