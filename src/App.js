@@ -34,13 +34,14 @@ class App extends Component {
       <div className="container py-4">
         <Header />
         <Navbar />
-        {this.renderRouter}
+        {this.renderRouter()}
         <footer className="pt-3 mt-4 text-muted border-top">
           EDAF90 - webprogrammering
         </footer>
       </div>
     );
   }
+
   renderPageContent() {
     return (
       <>
@@ -52,38 +53,34 @@ class App extends Component {
 
   renderRouter() {
     return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route
-            path="ComposeSalad"
-            element={
-              <ComposeSalad
-                inventory={inventory}
-                handleSalad={this.handleSalad}
-              />
-            }
-          />
-          <Route
-            path="ViewOrder"
-            element={
-              <ViewOrder
-                order={this.state.order}
-                handleSubmit={this.resetOrders}
-              />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route index path="/" element={<h1>Välkommna!</h1>} />
+        <Route
+          path="/compose-salad"
+          element={
+            <ComposeSalad
+              inventory={inventory}
+              handleSalad={this.handleSalad}
+            />
+          }
+        />
+        <Route
+          path="/view-order"
+          element={<ViewOrder order={this.state.order} />}
+        />
+        <Route path="*" element={<h1>Finns inget här!</h1>} />
+      </Routes>
     );
   }
 }
 
 function Header() {
   return (
-    <header className="pb-3 mb-4 border-bottom">
-      <span className="fs-4">Salladsbaren</span>
-    </header>
+    <>
+      <header className="pb-3 mb-4 border-bottom">
+        <span className="fs-4">Salladsbaren</span>
+      </header>
+    </>
   );
 }
 
@@ -91,12 +88,12 @@ function Navbar() {
   return (
     <ul className="nav nav-tabs">
       <li className="nav-item">
-        <Link className="nav-link" to="/ComposeSalad">
+        <Link className="nav-link" to="/compose-salad">
           Komponera en sallad
         </Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link" to="/ViewOrder">
+        <Link className="nav-link" to="/view-order">
           Se din beställning
         </Link>
       </li>
