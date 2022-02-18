@@ -4,6 +4,7 @@ import Salad from "./legacyFunctions";
 class ComposeSalad extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       foundation: "Sallad",
       protein: "Kycklingfilé",
@@ -55,6 +56,11 @@ class ComposeSalad extends Component {
       extras: [],
       dressing: "Ceasardressing"
     });
+
+    //console.log(this.props);
+    //const { navigate } = this.props.navigate();
+    //navigate("/view-order");
+    //this.props.navigate("/view-order");
   }
 
   render() {

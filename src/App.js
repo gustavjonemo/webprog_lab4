@@ -1,13 +1,13 @@
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.css";
-import { Component } from "react"; //Ny import
-import inventory from "./inventory.ES6"; //Ny import
-import ComposeSalad from "./ComposeSalad"; //Ny import
+import { Component } from "react";
+import inventory from "./inventory.ES6";
+import ComposeSaladWrapper from "./ComposeSalad";
 import ViewOrder from "./ViewOrder";
 import { Link } from "react-router-dom";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { /*BrowserRouter,*/ Routes, Route } from "react-router-dom";
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,7 +15,6 @@ class App extends Component {
     };
     this.handleSalad = this.handleSalad.bind(this);
     this.resetOrders = this.resetOrders.bind(this);
-    this.renderPageContent = this.renderPageContent.bind(this);
     this.renderRouter = this.renderRouter.bind(this);
   }
 
@@ -42,23 +41,14 @@ class App extends Component {
     );
   }
 
-  renderPageContent() {
-    return (
-      <>
-        <ViewOrder order={this.state.order} handleSubmit={this.resetOrders} />
-        <ComposeSalad inventory={inventory} handleSalad={this.handleSalad} />
-      </>
-    );
-  }
-
   renderRouter() {
     return (
       <Routes>
-        <Route index path="/" element={<h1>Välkommna!</h1>} />
+        <Route index path="/" element={<h1 className="p-2">Var hälsad.</h1>} />
         <Route
           path="/compose-salad"
           element={
-            <ComposeSalad
+            <ComposeSaladWrapper
               inventory={inventory}
               handleSalad={this.handleSalad}
             />
@@ -66,9 +56,14 @@ class App extends Component {
         />
         <Route
           path="/view-order"
-          element={<ViewOrder order={this.state.order} />}
+          element={
+            <ViewOrder
+              order={this.state.order}
+              handleSubmit={this.resetOrders}
+            />
+          }
         />
-        <Route path="*" element={<h1>Finns inget här!</h1>} />
+        <Route path="*" element={<h1 className="p-2">404 eller nått</h1>} />
       </Routes>
     );
   }
@@ -88,6 +83,11 @@ function Navbar() {
   return (
     <ul className="nav nav-tabs">
       <li className="nav-item">
+        <Link className="nav-link" to="/">
+          Hem
+        </Link>
+      </li>
+      <li className="nav-item">
         <Link className="nav-link" to="/compose-salad">
           Komponera en sallad
         </Link>
@@ -97,9 +97,6 @@ function Navbar() {
           Se din beställning
         </Link>
       </li>
-      {/* more links */}
     </ul>
   );
 }
-
-export default App;
