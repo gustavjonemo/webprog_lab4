@@ -6,7 +6,7 @@ import ComposeSaladWrapper from "./ComposeSaladWrapper";
 import ViewOrder from "./ViewOrder";
 import ViewIngredient from "./ViewIngredient";
 import { Link } from "react-router-dom";
-import { /*BrowserRouter,*/ Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 export default class App extends Component {
   constructor(props) {
@@ -65,13 +65,9 @@ export default class App extends Component {
           }
         />
         <Route path="*" element={<h1 className="p-2">404 eller nått</h1>} />
-        <Route 
-          path="/view-ingredient/:name" 
-          element={
-            <ViewIngredient
-              inventory={inventory}
-            />
-          }
+        <Route
+          path="/view-ingredient/:name"
+          element={<ViewIngredient inventory={inventory} />}
         />
       </Routes>
     );

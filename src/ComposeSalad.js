@@ -6,9 +6,9 @@ class ComposeSalad extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      foundation: "Sallad",
-      protein: "Kycklingfilé",
-      dressing: "Ceasardressing",
+      foundation: "",
+      protein: "",
+      dressing: "",
       extras: []
     };
 
@@ -17,6 +17,7 @@ class ComposeSalad extends Component {
   }
 
   handleChange(event) {
+    event.target.parentElement.classList.add("was-validated");
     if (event.target.name === "extras") {
       let pos = event.target.id;
       let tempArray = [...this.state.extras];
@@ -30,34 +31,39 @@ class ComposeSalad extends Component {
   }
 
   handleSubmit(event) {
-    let tempExtras = Object.keys(this.props.inventory).filter(
-      (name) => this.props.inventory[name].extra
-    );
-
     event.preventDefault();
+    if (event.target.checkValidity() === false) {
+      event.target.classList.add("was-validated");
+    } else {
+      let tempExtras = Object.keys(this.props.inventory).filter(
+        (name) => this.props.inventory[name].extra
+      );
 
-    let state = this.state;
-    let delishSalad = new Salad()
-      .add(state.foundation, this.props.inventory[state.foundation])
-      .add(state.protein, this.props.inventory[state.protein]);
+      let state = this.state;
 
-    tempExtras.forEach((extra, index) => {
-      if (state.extras[index]) {
-        delishSalad.add(extra, this.props.inventory[extra]);
-      }
-    });
+      let delishSalad = new Salad()
+        .add(state.foundation, this.props.inventory[state.foundation])
+        .add(state.protein, this.props.inventory[state.protein]);
 
-    delishSalad.add(state.dressing, this.props.inventory[state.dressing]);
+      tempExtras.forEach((extra, index) => {
+        if (state.extras[index]) {
+          delishSalad.add(extra, this.props.inventory[extra]);
+        }
+      });
 
-    this.props.handleSalad(delishSalad);
-    this.setState({
-      foundation: "Sallad",
-      protein: "Kycklingfilé",
-      extras: [],
-      dressing: "Ceasardressing"
-    });
+      delishSalad.add(state.dressing, this.props.inventory[state.dressing]);
 
-    this.props.navigate("/view-order");
+      this.props.handleSalad(delishSalad);
+
+      this.setState({
+        foundation: "",
+        protein: "",
+        extras: [],
+        dressing: ""
+      });
+
+      this.props.navigate("/view-order");
+    }
   }
 
   render() {
@@ -79,7 +85,7 @@ class ComposeSalad extends Component {
 
     return (
       <div className="continer col-12">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSubmit} noValidate>
           <div className="row h-200 p-5 bg-light border rounded-3">
             <h2>Välj innehållet i din sallad</h2>
             <div>
@@ -87,31 +93,39 @@ class ComposeSalad extends Component {
                 <label className="p-1">
                   Välj bas:{" "}
                   <select
+                    className="form-select"
                     name="foundation"
                     value={this.state.foundation}
                     onChange={this.handleChange}
+                    required
                   >
+                    <option value="">Gör ett val</option>
                     {foundation.map((name) => (
                       <option key={name} value={name}>
                         {name}{" "}
                       </option>
                     ))}
                   </select>
+                  <div className="invalid-feedback">Välj en bas.</div>
                 </label>
                 <div>
                   <label className="p-1">
                     Välj gainz:{" "}
                     <select
+                      className="form-select"
                       name="protein"
                       value={this.state.protein}
                       onChange={this.handleChange}
+                      required
                     >
+                      <option value="">Gör ett val</option>
                       {protein.map((name) => (
                         <option key={name} value={name}>
                           {name}
                         </option>
                       ))}
                     </select>
+                    <div className="invalid-feedback">Välj ett protein.</div>
                   </label>
                 </div>
               </div>
@@ -127,22 +141,26 @@ class ComposeSalad extends Component {
                   value={this.state.extras}
                   onChange={this.handleChange}
                 />{" "}
-                <Link to="view-ingredient/:name">{name}</Link>
+                <Link to={"/view-ingredient/:" + name}>{name}</Link>
               </div>
             ))}
             <label className="p-1">
               Välj dressing:{" "}
               <select
+                className="form-select"
                 name="dressing"
                 value={this.state.dressing}
                 onChange={this.handleChange}
+                required
               >
+                <option value="">Gör ett val</option>
                 {dressing.map((name) => (
                   <option key={name} value={name}>
                     {name}
                   </option>
                 ))}
               </select>
+              <div className="invalid-feedback">Välj en dressing.</div>
             </label>
           </div>
           <div className="form-group">

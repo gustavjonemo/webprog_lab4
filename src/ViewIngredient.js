@@ -1,25 +1,17 @@
 import { useParams } from "react-router-dom";
 
+export default function ViewIngredient(props) {
+  const id = useParams().name.substring(1);
 
-export default function ViewIngredient(inventory) {
-  let { id } = useParams();
-
-  const newArray = inventory.map(({key, value}) => ({ [key]: value }));
-
-
-  let Extras = Object.keys(inventory).filter(
-    name => this.props.inventory[name]
-  );
-
-  Extras.forEach((extra, index) => {
-    if (state.extras[index]) {
-      delishSalad.add(extra, this.props.inventory[extra]);
-    }
-  });
-
-  return (
-    <div className="continer col-12">
-      {}
-    </div>
-  );
+  if (props.inventory[id]) {
+    let ingredient = props.inventory[id];
+    const { extra, price, ...ingredientSpec } = ingredient;
+    return (
+      <div className="p-3">
+        {id + " egenskaper: " + Object.keys(ingredientSpec)}
+      </div>
+    );
+  } else {
+    return <div className="p-3">No such ingredient</div>;
+  }
 }
