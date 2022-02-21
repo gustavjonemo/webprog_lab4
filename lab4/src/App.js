@@ -22,63 +22,37 @@ export default class App extends Component {
     this.resetOrders = this.resetOrders.bind(this);
     this.renderRouter = this.renderRouter.bind(this);
   }
-
-  /*
-  const array1 = [1, 2, 3, 4];
-
-  // 0 + 1 + 2 + 3 + 4
-  const initialValue = 0;
-  const sumWithInitial = array1.reduce(
-    (previousValue, currentValue) => previousValue + currentValue,
-    initialValue
-  );
   
-  console.log(sumWithInitial);
-  // expected output: 10
-  */
-  
+
+
   componentDidMount() {
-    let inventoryTemp = [];
-    queries.forEach((query) => {
-      console.log(API + query + "/");
-      fetch(API + query + "/")
-      .then(response => response.json())
-      .then(data => Object.assign(inventoryTemp, data));
-      /*.then(data => 
-        inventoryTemp = data.reduce((accVal, curVal) => {
-          Object.assign(accVal, {curVal: {}})
-        }, {})
-      );*/
-      //.then(data => inventoryTemp[data] = {});
-      //.then(data => data.forEach((item) => {Object.assign(inventoryTemp, item)}));
-      //.then(data => console.log(typeof data[1]));
-      //.then(data => this.setState({inventory: Object.assign(this.state.inventory, {data})}));
-      //.then(data => this.setState({inventory: data}));
-    });
+    const inventoryTemp = {}
 
-    let inventoryTempTemp = {};
-    inventoryTemp.forEach(ingredient => {
-      fetch(API + query + "/" + ingredient)
-      .then(response => response.json())
-      .then(data => inventoryTempTemp[ingredient] = data);
-    })
-    console.log(inventoryTemp);
-    console.log(inventoryTempTemp);
+    Promise.all(
+      queries.map(query => {
+        this.safeFetchJson(API + query)
+          .then(ingredients => {
+            ingredients.map(ingredient => {
+              this.safeFetchJson(API + query + '/' + ingredient)
+              .then(ingrProps => inventoryTemp[ingredient] = ingrProps)
+            })
+          })
+      })
+    )
+    .then(() => this.setState({inventory: inventoryTemp}))
+    .catch(error => console.log(error))
 
-
-    /*const inventoryTempTemp = Object.fromEntries(Object.entries(inventoryTemp).map(
-      ([key, value]) => [value, {key}]
-    ));*/
-    //inventoryTemp.reduce((k, v) => ({ ...k, [v]: {}}), {}) 
-
-    //console.log(inventoryTemp);
-
-    //console.log(inventoryTempTemp);
-    //this.setState({inventory: inventoryTemp})
-    //console.log(this.state.inventory);
   }
-  
 
+  safeFetchJson(url) {
+    return fetch(url)
+    .then(response => {
+      if(!response.ok) {
+        throw new Error("${url} returned status ${response.status}");
+      }
+      return response.json();
+      });
+  }
 
   handleSalad(salad) {
     const tempOrder = [...this.state.order];
