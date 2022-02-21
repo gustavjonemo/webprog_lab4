@@ -1,23 +1,43 @@
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { Component } from "react";
-import inventory from "./inventory.ES6";
+import { Link, Routes, Route } from "react-router-dom";
+//import inventoryImport from "./inventory.ES6";
 import ComposeSaladWrapper from "./ComposeSaladWrapper";
 import ViewOrder from "./ViewOrder";
 import ViewIngredient from "./ViewIngredient";
-import { Link } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
+//import { Link } from "react-router-dom";
+
+const API = 'http://localhost:8080/';
+const queries = ["foundations", "proteins", "extras", "dressings"]
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      order: []
+      order: [],
+      inventory: {}
     };
     this.handleSalad = this.handleSalad.bind(this);
     this.resetOrders = this.resetOrders.bind(this);
     this.renderRouter = this.renderRouter.bind(this);
   }
+
+
+  
+  componentDidMount() {
+    queries.forEach((query) => {
+      console.log(API + query + "/");
+      fetch(API + query + "/")
+      .then(response => response.json())
+      //.then(data => console.log(typeof data[1]));
+      .then(data => this.setState({inventory: Object.assign(this.state.inventory, data)}));
+      //.then(data => this.setState({inventory: data}));
+    });
+    console.log(this.state.inventory);
+  }
+  
+
 
   handleSalad(salad) {
     const tempOrder = [...this.state.order];
@@ -50,7 +70,7 @@ export default class App extends Component {
           path="/compose-salad"
           element={
             <ComposeSaladWrapper
-              inventory={inventory}
+              inventory={this.state.inventory}
               handleSalad={this.handleSalad}
             />
           }
@@ -67,7 +87,7 @@ export default class App extends Component {
         <Route path="*" element={<h1 className="p-2">404 eller nått</h1>} />
         <Route
           path="/view-ingredient/:name"
-          element={<ViewIngredient inventory={inventory} />}
+          element={<ViewIngredient inventory={this.state.inventory} />}
         />
       </Routes>
     );
