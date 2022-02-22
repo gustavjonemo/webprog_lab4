@@ -9,6 +9,10 @@ export default class Salad {
     this.uuid = "salad_" + Salad.instanceCounter++;
   }
 
+  /*createSalad(uuid, ingredients){
+
+  }*/
+
   add(name, properties) {
     this.ingredients[name] = properties;
     return this;

@@ -2,11 +2,9 @@ import "./styles.css";
 import "bootstrap/dist/css/bootstrap.css";
 import { Component } from "react";
 import { Link, Routes, Route } from "react-router-dom";
-//import inventoryImport from "./inventory.ES6";
 import ComposeSaladWrapper from "./ComposeSaladWrapper";
 import ViewOrder from "./ViewOrder";
 import ViewIngredient from "./ViewIngredient";
-//import { Link } from "react-router-dom";
 
 const API = 'http://localhost:8080/';
 const queries = ["foundations", "proteins", "extras", "dressings"]
@@ -15,15 +13,31 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      order: [],
-      inventory: {}
+      order: this.getOrders(),
+      inventory: {},
+      orderConfirm: null
     };
     this.handleSalad = this.handleSalad.bind(this);
     this.resetOrders = this.resetOrders.bind(this);
     this.renderRouter = this.renderRouter.bind(this);
     this.submitOrders = this.submitOrders.bind(this);
+    this.getOrders = this.getOrders.bind(this);
+
+    //this.setState({order: this.getOrders()});
+
   }
   
+
+  getOrders(){
+    if(localStorage.length === 0){
+      return []
+    } else {
+      const temp = JSON.parse(localStorage.getItem("order"));
+      console.log(temp);
+      return temp;
+    }
+  }
+
 
 
   componentDidMount() {
@@ -40,7 +54,7 @@ export default class App extends Component {
           })
       })
     )
-    .then(() => this.setState({inventory: inventoryTemp}))
+    .then(_ => this.setState({inventory: inventoryTemp}))
     .catch(error => console.log(error))
 
   }
@@ -61,9 +75,9 @@ export default class App extends Component {
     const orderData = tempOrder.map(salad => {
       return Object.keys(salad.ingredients)
     })
-    console.log(orderData);
+    //console.log(orderData);
 
-    let fetchData = {};
+    //let fetchData = {};
     fetch(API + 'orders/', {
       method: 'POST',
       headers: {
@@ -71,7 +85,7 @@ export default class App extends Component {
       },
       body: JSON.stringify(orderData)
     }).then(response => response.json())
-    .then(data => fetchData = data)
+    .then(data => this.setState({orderConfirm: data}))
     .catch(error => console.log(error));
     
   }
@@ -79,6 +93,7 @@ export default class App extends Component {
   handleSalad(salad) {
     const tempOrder = [...this.state.order];
     tempOrder.push(salad);
+    localStorage.setItem("order", JSON.stringify(tempOrder))
     this.setState({ order: tempOrder });
   }
 
@@ -120,6 +135,7 @@ export default class App extends Component {
               order={this.state.order}
               reset={this.resetOrders}
               submit={this.submitOrders}
+              orderConfirm={this.state.orderConfirm}
             />
           }
         />
