@@ -12,11 +12,18 @@ export default class ViewOrder extends Component {
             </div>
           ))}
           <p></p>
-          <form onSubmit={this.props.handleSubmit}>
+          <ul className="nav nav-pills">
+          <form onSubmit={this.props.submit}>
             <button type="submit" className="btn btn-primary">
-              Återställ
+              Lägg Beställning
             </button>
           </form>
+          <form onSubmit={this.props.reset}>
+            <button type="submit" className="btn btn-secondary">
+              Rensa
+            </button>
+          </form>
+          </ul>
         </div>
       </div>
     );

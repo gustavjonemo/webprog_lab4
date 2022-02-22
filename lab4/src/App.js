@@ -21,6 +21,7 @@ export default class App extends Component {
     this.handleSalad = this.handleSalad.bind(this);
     this.resetOrders = this.resetOrders.bind(this);
     this.renderRouter = this.renderRouter.bind(this);
+    this.submitOrders = this.submitOrders.bind(this);
   }
   
 
@@ -54,13 +55,33 @@ export default class App extends Component {
       });
   }
 
+  submitOrders(event) {
+    event.preventDefault();
+    const tempOrder = [...this.state.order];
+    const orderData = tempOrder.map(salad => {
+      return Object.keys(salad.ingredients)
+    })
+    console.log(orderData);
+
+    
+    fetch(API + 'orders/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ orderData })
+    });
+    
+  }
+
   handleSalad(salad) {
     const tempOrder = [...this.state.order];
     tempOrder.push(salad);
     this.setState({ order: tempOrder });
   }
 
-  resetOrders() {
+  resetOrders(event) {
+    event.preventDefault();
     this.setState({ order: [] });
   }
 
@@ -95,7 +116,8 @@ export default class App extends Component {
           element={
             <ViewOrder
               order={this.state.order}
-              handleSubmit={this.resetOrders}
+              reset={this.resetOrders}
+              submit={this.submitOrders}
             />
           }
         />
