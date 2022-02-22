@@ -69,7 +69,7 @@ export default class App extends Component {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ orderData })
+      body: JSON.stringify(orderData)
     });
     
   }
