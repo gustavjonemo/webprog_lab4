@@ -5,6 +5,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import ComposeSaladWrapper from "./ComposeSaladWrapper";
 import ViewOrder from "./ViewOrder";
 import ViewIngredient from "./ViewIngredient";
+import Salad from "./legacyFunctions";
 
 const API = 'http://localhost:8080/';
 const queries = ["foundations", "proteins", "extras", "dressings"]
@@ -34,7 +35,15 @@ export default class App extends Component {
     } else {
       const temp = JSON.parse(localStorage.getItem("order"));
       console.log(temp);
-      return temp;
+      //const test = temp.map(salad => {
+      //  if (!!salad)
+      //    new Salad(salad.ingredients, salad.uuid);
+      //  else
+      //    {}
+      //});
+      const test = new Salad(temp[0].ingredients, temp[0].uuid); //experimentellt
+      console.log(test);
+      return [] //denast för testning
     }
   }
 

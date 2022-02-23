@@ -4,14 +4,15 @@
 export default class Salad {
   static instanceCounter = 0;
 
-  constructor() {
-    this.ingredients = {};
-    this.uuid = "salad_" + Salad.instanceCounter++;
+  constructor(ingredients, uuid) {
+    if(!!ingredients && !!uuid){
+      this.ingredients = ingredients;
+      this.uuid = uuid;
+    } else {
+      this.ingredients = {};
+      this.uuid = "salad_" + Salad.instanceCounter++;
+    }
   }
-
-  /*createSalad(uuid, ingredients){
-
-  }*/
 
   add(name, properties) {
     this.ingredients[name] = properties;
