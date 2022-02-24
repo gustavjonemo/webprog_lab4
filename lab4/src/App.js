@@ -24,26 +24,20 @@ export default class App extends Component {
     this.submitOrders = this.submitOrders.bind(this);
     this.getOrders = this.getOrders.bind(this);
 
-    //this.setState({order: this.getOrders()});
-
   }
   
 
   getOrders(){
-    if(localStorage.length === 0){
-      return []
+    if(!!localStorage.getItem("order")){
+      const order = JSON.parse(localStorage.getItem("order"));
+      return order.map(salad => {
+        if (!!salad)
+          return new Salad(salad.ingredients, salad.uuid);
+        else
+          return new Salad();
+      });
     } else {
-      const temp = JSON.parse(localStorage.getItem("order"));
-      console.log(temp);
-      //const test = temp.map(salad => {
-      //  if (!!salad)
-      //    new Salad(salad.ingredients, salad.uuid);
-      //  else
-      //    {}
-      //});
-      const test = new Salad(temp[0].ingredients, temp[0].uuid); //experimentellt
-      console.log(test);
-      return [] //denast för testning
+      return []
     }
   }
 
@@ -84,9 +78,7 @@ export default class App extends Component {
     const orderData = tempOrder.map(salad => {
       return Object.keys(salad.ingredients)
     })
-    //console.log(orderData);
 
-    //let fetchData = {};
     fetch(API + 'orders/', {
       method: 'POST',
       headers: {
@@ -109,6 +101,7 @@ export default class App extends Component {
   resetOrders(event) {
     event.preventDefault();
     this.setState({ order: [] });
+    localStorage.clear();
   }
 
   render() {

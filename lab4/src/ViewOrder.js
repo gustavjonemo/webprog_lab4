@@ -1,45 +1,6 @@
 import { Component } from "react";
-
-/*
-const { useState, useEffect, useRef } = React;
-const { Toast } = bootstrap;
-
-function ToastDemo() {
-    var [toast, setToast] = useState(false);
-    const toastRef = useRef();
-
-    useEffect(() => {
-        var myToast = toastRef.current
-        var bsToast = bootstrap.Toast.getInstance(myToast)
-        
-        if (!bsToast) {
-            // initialize Toast
-            bsToast = new Toast(myToast, {autohide: false})
-            // hide after init
-            bsToast.hide()
-            setToast(false)
-        }
-        else {
-            // toggle
-            toast ? bsToast.show() : bsToast.hide()
-        }
-    })
-
-    return (
-    <div className="py-2">
-        <button className="btn btn-success" onClick={() => setToast(toast => !toast)}>
-            Toast {toast?'hide':'show'}
-        </button>
-        <div className="toast position-absolute m-4" role="alert" ref={toastRef}>
-            <div className="toast-body">
-              Hello, world! This is a toast message.
-            </div>
-        </div>
-    </div>
-    )
-}
-*/
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class ViewOrder extends Component {
   render() {
@@ -55,9 +16,10 @@ export default class ViewOrder extends Component {
           <p></p>
           <ul className="nav nav-pills">
           <form onSubmit={this.props.submit}>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" onClick={() => toast("Beställning lagd! ID: " + this.props.orderConfirm.uuid)}>
               Lägg Beställning
             </button>
+            <ToastContainer />
           </form>
           <form onSubmit={this.props.reset}>
             <button type="submit" className="btn btn-secondary">
@@ -66,14 +28,8 @@ export default class ViewOrder extends Component {
           </form>
           </ul>
         </div>
-        {this.renderConf()}
       </div>
+      
     );
-  }
-  renderConf() {
-    if(this.props.orderConfirm) {
-     return <p>Beställnings-ID: {this.props.orderConfirm.uuid}</p>;
-    } else
-      return "";
   }
 }
